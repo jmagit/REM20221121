@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import com.example.domains.entities.Actor;
+import com.example.domains.entities.dtos.ActorDTO;
+import com.example.domains.entities.dtos.ActorShort;
 
 public interface ActorRepository extends JpaRepository<Actor, Integer>, JpaSpecificationExecutor<Actor> {
 	List<Actor> findTop5ByFirstNameStartingWithOrderByLastNameDesc(String prefijo);
@@ -18,4 +20,9 @@ public interface ActorRepository extends JpaRepository<Actor, Integer>, JpaSpeci
 	List<Actor> findNovedadesJPQL(int inicia);
 	@Query(value = "SELECT * FROM actor a WHERE a.actor_id > ?1", nativeQuery = true)
 	List<Actor> findNovedadesSQL(int inicia);
+
+	List<ActorDTO> getByActorIdGreaterThan(int inicia);
+	List<ActorShort> readByActorIdGreaterThan(int inicia);
+	
+	<T> List<T> findAllBy(Class<T> tipo);
 }
