@@ -93,5 +93,12 @@ public class ActorResource {
 	public void delete(@PathVariable int id) {
 		srv.deleteById(id);
 	}
+
+	@PutMapping("/{id}/jubilacion")
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public void update(@PathVariable int id) throws BadRequestException, NotFoundException, InvalidDataException {
+		// ...
+	}
+
 }
 
