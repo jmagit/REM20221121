@@ -1,5 +1,6 @@
 package com.example.application.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.validation.ConstraintViolation;
@@ -21,32 +22,38 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.domains.contracts.services.ActorService;
+import com.example.domains.entities.dtos.ActorDTO;
+import com.example.domains.entities.dtos.ActorShort;
 import com.example.exceptions.BadRequestException;
+import com.example.exceptions.DuplicateKeyException;
+import com.example.exceptions.InvalidDataException;
 import com.example.exceptions.NotFoundException;
 
 import org.springframework.http.HttpStatus;
 
 @RestController
-@RequestMapping("/api/actores")
+@RequestMapping("/api/actores/v1")
 public class ActorResource {
 	@Autowired
-	private ActorRepository dao;
-
-	@Autowired
-	private Validator validator;
+	private ActorService srv;
 
 	@GetMapping
-	public List<Actor> getAll() {
-		// …
+	public List<ActorShort> getAll() {
+		return srv.getByProjection(ActorShort.class);
 	}
 
 	@GetMapping(path = "/{id}")
-	public Actor getOne(@PathVariable int id) throws NotFoundException {
-		// …
+	public ActorDTO getOne(@PathVariable int id) throws NotFoundException {
+		var item = srv.getOne(id);
+		if(item.isEmpty())
+			throw new NotFoundException();
+		return ActorDTO.from(item.get());
 	}
+	
 	@PostMapping
-	public ResponseEntity<Object> create(@Valid @RequestBody Actor item) throws BadRequestException {
-		// …
+	public ResponseEntity<Object> create(@Valid @RequestBody ActorDTO item) throws BadRequestException, DuplicateKeyException, InvalidDataException {
+		var newItem = srv.add(ActorDTO.from(item));
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 			.buildAndExpand(newItem.getActorId()).toUri();
 		return ResponseEntity.created(location).build();
@@ -55,14 +62,16 @@ public class ActorResource {
 
 	@PutMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void update(@PathVariable int id, @Valid @RequestBody Actor item) throws BadRequestException, NotFoundException {
-		// …
+	public void update(@PathVariable int id, @Valid @RequestBody ActorDTO item) throws BadRequestException, NotFoundException, InvalidDataException {
+		if(id != item.getActorId())
+			throw new BadRequestException("No coinciden los identificadores");
+		srv.modify(ActorDTO.from(item));
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable int id) {
-		// ..
+		srv.deleteById(id);
 	}
 }
 
