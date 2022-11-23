@@ -1,5 +1,7 @@
 package com.example;
 
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,6 +14,7 @@ import com.example.exceptions.NotFoundException;
 
 import java.io.Serializable;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 
 @RestControllerAdvice
@@ -43,9 +46,9 @@ public class ApiExceptionHandler {
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ExceptionHandler({ NotFoundException.class })
+	@ExceptionHandler({ NotFoundException.class, EmptyResultDataAccessException.class })
 	public ErrorMessage notFoundRequest(Exception exception) {
-		return new ErrorMessage(exception.getMessage(),
+		return new ErrorMessage("Not found",
 				ServletUriComponentsBuilder.fromCurrentRequest().build().toUriString());
 	}
 
@@ -56,8 +59,14 @@ public class ApiExceptionHandler {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ InvalidDataException.class })
+	@ExceptionHandler({ InvalidDataException.class, MethodArgumentNotValidException.class })
 	public ErrorMessage invalidData(Exception exception) {
 		return new ErrorMessage("Invalid data", exception.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	@ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
+	public ErrorMessage methodNotSupported(Exception exception) {
+		return new ErrorMessage(exception.getMessage(), "");
 	}
 }
