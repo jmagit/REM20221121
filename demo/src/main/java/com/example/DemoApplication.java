@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.domain.Sort;
 
 import com.example.domains.contracts.repositories.ActorRepository;
+import com.example.domains.contracts.services.ActorService;
 import com.example.domains.entities.Actor;
 import com.example.domains.entities.dtos.ActorDTO;
 import com.example.domains.entities.dtos.ActorShort;
@@ -21,8 +22,11 @@ public class DemoApplication implements CommandLineRunner {
 		// ...
 	}
 
+//	@Autowired
+//	ActorRepository dao;
+
 	@Autowired
-	ActorRepository dao;
+	ActorService srv;
 
 	@Override
 	@Transactional
@@ -66,8 +70,12 @@ public class DemoApplication implements CommandLineRunner {
 //		dao.findNovedadesSQL(200).forEach(p -> System.out.println(ActorDTO.from(p)));
 //		dao.getByActorIdGreaterThan(200).forEach(System.out::println);
 //		dao.readByActorIdGreaterThan(200).forEach(p -> System.out.println(p.getActorId() + " " + p.getNombre()));
-		dao.findAllBy(ActorDTO.class).forEach(System.out::println);
-		dao.findAllBy(ActorShort.class).forEach(p -> System.out.println(p.getActorId() + " " + p.getNombre()));
+//		dao.findAllBy().forEach(System.out::println);
+//		dao.findAllBy(ActorShort.class).forEach(p -> System.out.println(p.getActorId() + " " + p.getNombre()));
+//		srv.getByProjection(ActorDTO.class).forEach(System.out::println);
+//		srv.deleteById(218);
+//		srv.getByProjection(ActorShort.class).forEach(p -> System.out.println(p.getActorId() + " " + p.getNombre()));
+//		srv.add(new Actor(0, null, null));
 	}
 
 }

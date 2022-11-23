@@ -2,6 +2,10 @@ package com.example.domains.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -60,14 +64,17 @@ public class Film implements Serializable {
 
 	//bi-directional many-to-one association to FilmActor
 	@OneToMany(mappedBy="film", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
 	private List<FilmActor> filmActors;
 
 	//bi-directional many-to-one association to FilmCategory
 	@OneToMany(mappedBy="film", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonBackReference
 	private List<FilmCategory> filmCategories;
 
 	//bi-directional many-to-one association to Inventory
 	@OneToMany(mappedBy="film")
+	@JsonIgnore
 	private List<Inventory> inventories;
 
 	public Film() {

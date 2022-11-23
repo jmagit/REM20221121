@@ -2,6 +2,11 @@ package com.example.domains.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -19,16 +24,20 @@ public class Category implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="category_id", unique=true, nullable=false)
+	@JsonProperty("id")
 	private int categoryId;
 
 	@Column(name="last_update", insertable=false, updatable=false, nullable=false)
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
 	private Timestamp lastUpdate;
 
 	@Column(nullable=false, length=25)
+	@JsonProperty("categoria")
 	private String name;
 
 	//bi-directional many-to-one association to FilmCategory
 	@OneToMany(mappedBy="category")
+	@JsonIgnore
 	private List<FilmCategory> filmCategories;
 
 	public Category() {

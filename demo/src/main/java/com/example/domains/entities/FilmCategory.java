@@ -2,6 +2,9 @@ package com.example.domains.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.sql.Timestamp;
 
 
@@ -24,11 +27,13 @@ public class FilmCategory implements Serializable {
 	//bi-directional many-to-one association to Category
 	@ManyToOne
 	@JoinColumn(name="category_id", nullable=false, insertable=false, updatable=false)
+	@JsonManagedReference
 	private Category category;
 
 	//bi-directional many-to-one association to Film
 	@ManyToOne
 	@JoinColumn(name="film_id", nullable=false, insertable=false, updatable=false)
+	@JsonManagedReference
 	private Film film;
 
 	public FilmCategory() {
