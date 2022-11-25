@@ -29,6 +29,8 @@ import com.example.domains.entities.dtos.PelisDto;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RefreshScope
 @RestController
@@ -104,9 +106,9 @@ public class CotillaResource {
 		return rslt;
 	}
 
-/*
+
 //	@PreAuthorize("hasRole('ADMIN')")
-	@PreAuthorize("authenticated")
+//	@PreAuthorize("authenticated")
 	@SecurityRequirement(name = "bearerAuth")
 	@PostMapping(path = "/pelis/{id}/like")
 	public String getPelisLike(@PathVariable int id, @Parameter(hidden = true) @RequestHeader(required = false) String authorization) {
@@ -115,7 +117,7 @@ public class CotillaResource {
 			return proxy.meGusta(id);
 		return proxy.meGusta(id, authorization);
 	}
-*/
+
 	@Autowired
 	private CircuitBreakerFactory cbFactory;
 	
